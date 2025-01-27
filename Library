@@ -1,0 +1,67 @@
+CustomLib = {}
+
+local function printvalue(key,value,mult)
+    if typeof(value) ~= "table" then
+        if typeof(key) == "number" then
+            print(string.rep("\t",mult).."["..key.."]\t = \t"..tostring(value))
+        elseif typeof(key) == "string" then
+            print(string.rep("\t",mult).."[\""..key.."\"]\t = \t"..tostring(value))
+        else
+            warn("CANT PRINT TYPE "..typeof(key))
+        end
+    else
+        if typeof(key) == "number" then
+            print(string.rep("\t",mult).."["..key.."]\t = \t"..tostring(value))
+        elseif typeof(key) == "string" then
+            print(string.rep("\t",mult).."[\""..key.."\"]\t = \t"..tostring(value))
+        else
+            warn("CANT PRINT TYPE "..typeof(key))
+        end
+        CustomLib.PrintTable(value,mult+1)
+    end
+end
+
+
+
+function CustomLib.PrintTable(tbl,mult)
+    if typeof(tbl) == "table" then
+        for k,v in pairs(tbl) do
+            local help = mult or 0
+            printvalue(k,v,help)
+        end
+    else
+        warn("WRONG ARGUMENT PRINT TABLE FUNCTION")
+    end
+end
+function CustomLib.FunctionSpy(functbl,blacklist,showargs)
+    for name,func in pairs(functbl) do
+        if typeof(func) == "function" and not isfunctionhooked(func) then
+            blacklist = blacklist or {}
+            showargs = showargs or false
+            for k,v in pars(blacklist) do
+                if v == naime then
+                    return print("GOT BLACKLISTED FUNCTION")
+                end
+            end
+            local oldf
+            oldf = hookfunction(func,function(...)
+                local args = {...}
+                print("HOOKED FUNCTION "..name)
+                if showargs then
+                    CustomLib.PrintTable(args)
+                end
+                return oldf(...)
+            end)
+        end
+    end
+end
+function CustomLib.StopFunctionSpy(functbl)
+    for name,func in pairs(functbl) do
+        if typeof(func) == "function" and isfunctionhooked(func) then
+            restorefunction(func)
+            print("RESTORED "..name)
+        end
+    end
+end
+
+return CustomLib
