@@ -38,11 +38,11 @@ function CustomLib.FunctionSpy(functbl,blacklist,showargs)
         if typeof(func) == "function" and not isfunctionhooked(func) then
             blacklist = blacklist or {}
             showargs = showargs or false
-            for k,v in pairs(blacklist) do
+            --[[for k,v in pairs(blacklist) do
                 if v == naime then
                     return print("GOT BLACKLISTED FUNCTION")
                 end
-            end
+            end]]--
             pcall(function()
                 local oldf
                 oldf = hookfunction(func,function(...)
